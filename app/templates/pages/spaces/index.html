@@ -74,10 +74,10 @@
                         Sort By
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
-                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='price_asc') }}">Price: Low to High</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='price_desc') }}">Price: High to Low</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='capacity_asc') }}">Capacity: Low to High</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='capacity_desc') }}">Capacity: High to Low</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', location=selected_location, capacity_min=capacity_min, capacity_max=capacity_max, sort='price_asc') }}">Price: Low to High</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', location=selected_location, capacity_min=capacity_min, capacity_max=capacity_max, sort='price_desc') }}">Price: High to Low</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', location=selected_location, capacity_min=capacity_min, capacity_max=capacity_max, sort='capacity_asc') }}">Capacity: Low to High</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', location=selected_location, capacity_min=capacity_min, capacity_max=capacity_max, sort='capacity_desc') }}">Capacity: High to Low</a></li>
                     </ul>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                     <ul class="pagination justify-content-center">
                         {% if spaces.has_prev %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('space.index', page=spaces.prev_num, **request.args) }}">Previous</a>
+                            <a class="page-link" href="{{ url_for('space.index', page=spaces.prev_num, location=selected_location, capacity_min=capacity_min, capacity_max=capacity_max) }}">Previous</a>
                         </li>
                         {% else %}
                         <li class="page-item disabled">
@@ -127,7 +127,7 @@
                                 </li>
                                 {% else %}
                                 <li class="page-item">
-                                    <a class="page-link" href="{{ url_for('space.index', page=page_num, **request.args) }}">{{ page_num }}</a>
+                                    <a class="page-link" href="{{ url_for('space.index', page=page_num, location=selected_location, capacity_min=capacity_min, capacity_max=capacity_max) }}">{{ page_num }}</a>
                                 </li>
                                 {% endif %}
                             {% else %}
@@ -139,7 +139,7 @@
                         
                         {% if spaces.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('space.index', page=spaces.next_num, **request.args) }}">Next</a>
+                            <a class="page-link" href="{{ url_for('space.index', page=spaces.next_num, location=selected_location, capacity_min=capacity_min, capacity_max=capacity_max) }}">Next</a>
                         </li>
                         {% else %}
                         <li class="page-item disabled">

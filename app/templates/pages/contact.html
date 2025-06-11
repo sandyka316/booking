@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - BookSpace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-5 fw-bold mb-4 text-center">Contact Us</h1>
+            <p class="lead text-center mb-5">Have questions or feedback? We'd love to hear from you!</p>
+            
+            <div class="row mb-5">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
+                            <h3 class="h4">Email</h3>
+                            <p class="card-text">support@bookspace.com</p>
+                            <a href="mailto:support@bookspace.com" class="btn btn-outline-primary">Send Email</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-phone fa-2x text-primary mb-3"></i>
+                            <h3 class="h4">Phone</h3>
+                            <p class="card-text">+1 (555) 123-4567</p>
+                            <a href="tel:+15551234567" class="btn btn-outline-primary">Call Us</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
+                            <h3 class="h4">Office</h3>
+                            <p class="card-text">123 Workspace Ave, Suite 100<br>San Francisco, CA 94103</p>
+                            <a href="https://maps.google.com" target="_blank" class="btn btn-outline-primary">View Map</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="h3 mb-4 text-center">Send Us a Message</h2>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <select class="form-select" id="subject" required>
+                                <option value="" selected disabled>Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="support">Technical Support</option>
+                                <option value="billing">Billing Question</option>
+                                <option value="partnership">Partnership Opportunity</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="message" class="form-label">Your Message</label>
+                            <textarea class="form-control" id="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

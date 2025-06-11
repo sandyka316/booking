@@ -43,7 +43,7 @@ bookspace/
 
 1. **Clone the repository**:
    ```
-   git clone https://github.com/yourusername/bookspace.git
+   git clone https://github.com/sandy/booking.git
    cd bookspace
    ```
 

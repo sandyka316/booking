@@ -141,4 +141,82 @@
 
 <section class="py-5 bg-primary text-white text-center">
     <div class="container">
-        <h2 class="display-6 fw-bold mb-4">Ready to Find Your Perfect Space
+        <h2 class="display-6 fw-bold mb-4">Ready to Find Your Perfect Space?</h2>
+        <p class="lead mb-4">Join thousands of professionals who use BookSpace to find their ideal workspace.</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg px-5">Sign Up Now</a>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="display-6 fw-bold mb-4">What Our Users Say</h2>
+                <div class="testimonial-slider">
+                    <div class="testimonial p-4 bg-light rounded-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ url_for('static', filename='images/testimonial-1.jpg') }}" class="rounded-circle me-3" width="60" alt="User">
+                            <div>
+                                <h5 class="mb-0">Sarah Johnson</h5>
+                                <p class="text-muted mb-0">Freelance Designer</p>
+                            </div>
+                        </div>
+                        <p class="mb-0">"BookSpace changed how I work! I can find quiet spaces to focus when needed or collaborative environments when meeting clients."</p>
+                        <div class="mt-2">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="display-6 fw-bold mb-4">Frequently Asked Questions</h2>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                How do I book a space?
+                            </button>
+                        </h3>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Simply browse our available spaces, select one that meets your needs, choose your date and time, and confirm your booking. You'll receive an instant confirmation email with all the details.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Can I cancel my booking?
+                            </button>
+                        </h3>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, you can cancel your booking up to 24 hours before the start time without any penalty. Cancellations made less than 24 hours in advance may be subject to charges.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                What amenities are included?
+                            </button>
+                        </h3>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                All spaces include high-speed Wi-Fi, access to restrooms, and basic office furniture. Additional amenities vary by location and may include coffee/tea service, printing facilities, whiteboards, and more.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('main.faq') }}" class="btn btn-outline-primary">View All FAQs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

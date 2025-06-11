@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - BookSpace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-5 fw-bold mb-4 text-center">About BookSpace</h1>
+            <p class="lead text-center mb-5">Your go-to platform for finding and booking the perfect co-working space.</p>
+            
+            <div class="mb-5">
+                <h2 class="h3 mb-3">Our Mission</h2>
+                <p>At BookSpace, we believe that the environment you work in greatly impacts your productivity and creativity. Our mission is to connect professionals with inspiring workspaces that meet their unique needs. Whether you're a freelancer looking for a quiet space to focus, a team in need of a collaborative meeting room, or a startup searching for your next headquarters, BookSpace has got you covered.</p>
+            </div>
+            
+            <div class="mb-5">
+                <h2 class="h3 mb-3">How We Started</h2>
+                <p>BookSpace was founded in 2023 by a group of remote workers who struggled to find suitable places to work from. After bouncing between coffee shops, libraries, and makeshift home offices, they realized there was a need for a platform that would streamline the process of finding and booking professional workspaces.</p>
+                <p>What started as a simple idea has grown into a comprehensive booking platform with hundreds of spaces across multiple cities.</p>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-users fa-2x text-primary mb-3"></i>
+                            <h3 class="h4">For Space Users</h3>
+                            <p class="card-text">Find and book the perfect workspace that fits your needs, schedule, and budget. Filter by location, amenities, capacity, and more.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-building fa-2x text-primary mb-3"></i>
+                            <h3 class="h4">For Space Providers</h3>
+                            <p class="card-text">List your available spaces, manage bookings, and reach a wider audience of professionals looking for quality workspaces.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-5">
+                <h2 class="h3 mb-3">Our Team</h2>
+                <p>We're a diverse team of tech enthusiasts, remote work advocates, and workspace design lovers. Our combined experience in technology, hospitality, and design allows us to create a platform that truly understands the needs of modern professionals.</p>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="h3 mb-4">Join the BookSpace Community</h2>
+                <p class="mb-4">Ready to transform the way you work? Join thousands of professionals who use BookSpace to find their ideal workspace.</p>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-5">Sign Up Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

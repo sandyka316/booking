@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Frequently Asked Questions - BookSpace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-5 fw-bold mb-4 text-center">Frequently Asked Questions</h1>
+            <p class="lead text-center mb-5">Find answers to common questions about BookSpace.</p>
+            
+            <div class="accordion mb-5" id="faqAccordion">
+                <!-- Booking Questions -->
+                <h2 class="h4 mb-3">Booking Questions</h2>
+                
+                <div class="accordion-item mb-3 border shadow-sm">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How do I book a space?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Booking a space on BookSpace is simple:</p>
+                            <ol>
+                                <li>Browse available spaces or use our search filters to find what you need</li>
+                                <li>Select a space that interests you to view details</li>
+                                <li>Choose your desired date and time</li>
+                                <li>Sign in to your account (or create one if you're new)</li>
+                                <li>Confirm your booking details and complete the booking</li>
+                            </ol>
+                            <p>You'll receive an immediate confirmation email with all the details of your booking.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item mb-3 border shadow-sm">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Can I cancel my booking?
+                        </button>
+                    </h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Yes, you can cancel your booking through your account dashboard. Our cancellation policy is as follows:</p>
+                            <ul>
+                                <li>Cancellations made 24+ hours before the booking start time: Full refund</li>
+                                <li>Cancellations made less than 24 hours before the booking: No refund</li>
+                            </ul>
+                            <p>Some spaces may have their own specific cancellation policies, which will be clearly displayed before you confirm your booking.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item mb-3 border shadow-sm">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            How far in advance can I book a space?
+                        </button>
+                    </h3>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Most spaces on our platform can be booked up to 3 months in advance. For longer-term bookings or special arrangements, please contact the space directly or reach out to our support team.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Questions -->
+                <h2 class="h4 mb-3 mt-5">Account & Payment Questions</h2>
+                
+                <div class="accordion-item mb-3 border shadow-sm">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            How do I create an account?
+                        </button>
+                    </h3>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>To create a BookSpace account:</p>
+                            <ol>
+                                <li>Click on the "Sign Up" button in the top-right corner of any page</li>
+                                <li>Enter your email address and create a password</li>
+                                <li>Complete your profile information</li>
+                                <li>Verify your email address by clicking the link sent to your inbox</li>
+                            </ol>
+                            <p>Once your account is created, you can immediately start browsing and booking spaces.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item mb-3 border shadow-sm">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                            What payment methods do you accept?
+                        </button>
+                    </h3>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>BookSpace accepts the following payment methods:</p>
+                            <ul>
+                                <li>All major credit cards (Visa, Mastercard, American Express)</li>
+                                <li>PayPal</li>
+                                <li>Bank transfers (for certain bookings)</li>
+                            </ul>
+                            <p>All payments are processed securely through our payment partners.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Space Questions -->
+                <h2 class="h4 mb-3 mt-5">Space & Amenities Questions</h2>
+                
+                <div class="accordion-item mb-3 border shadow-sm">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                            What amenities are included with the spaces?
+                        </button>
+                    </h3>
+                    <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>All BookSpace listings include basic amenities such as:</p>
+                            <ul>
+                                <li>High-speed Wi-Fi</li>
+                                <li>Access to restrooms</li>
+                                <li>Basic furniture appropriate to the space type</li>
+                            </ul>
+                            <p>Additional amenities vary by location and may include:</p>
+                            <ul>
+                                <li>Coffee/tea service</li>
+                                <li>Printing facilities</li>
+                                <li>Projectors or TVs</li>
+                                <li>Whiteboards</li>
+                                <li>Kitchen access</li>
+                                <li>Phone booths</li>
+                            </ul>
+                            <p>Each space listing details exactly which amenities are included.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border shadow-sm">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                            I'm a space owner. How can I list my space on BookSpace?
+                        </button>
+                    </h3>
+                    <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>If you own a space and would like to list it on BookSpace, please contact our partner relations team at partners@bookspace.com. We'll guide you through the process of becoming a BookSpace partner.</p>
+                            <p>Our team will help you create an attractive listing, set your availability and pricing, and get your space in front of potential bookers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <h3 class="h4 mb-4">Still have questions?</h3>
+                <p class="mb-4">Our support team is ready to help with any other questions or concerns.</p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

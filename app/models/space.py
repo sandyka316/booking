@@ -37,6 +37,9 @@ class Space(db.Model):
     
     def is_available_at(self, start_time, end_time):
         """Check if space is available for booking at the specified time range"""
+        # Import inside method to avoid circular import
+        from app.models.booking import Booking
+        
         overlapping_bookings = Booking.query.filter(
             Booking.space_id == self.id,
             Booking.status == 'confirmed',
