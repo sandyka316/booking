@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - BookSpace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <img src="{{ url_for('static', filename='images/' + current_user.profile_image) }}" 
+                             class="rounded-circle img-fluid" style="max-width: 120px;" alt="Profile Image">
+                    </div>
+                    <h5 class="card-title">{{ current_user.first_name }} {{ current_user.last_name }}</h5>
+                    <p class="card-text text-muted">@{{ current_user.username }}</p>
+                    <p class="card-text">
+                        <span class="badge bg-{{ 'primary' if current_user.is_admin() else 'secondary' }}">
+                            {{ current_user.role|capitalize }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="list-group">
+                <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-user-cog me-2"></i> Account Settings
+                </a>
+                <a href="{{ url_for('booking.my_bookings') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calendar-check me-2"></i> My Bookings
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Profile Settings</h4>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('auth.profile') }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ current_user.first_name }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ current_user.last_name }}">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" value="{{ current_user.username }}" disabled>
+                                <div class="form-text">Username cannot be changed.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" value="{{ current_user.email }}" disabled>
+                                <div class="form-text">Email cannot be changed.</div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <h5>Change Password</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="current_password" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="new_password" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="confirm_new_password" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirm_new_password" name="confirm_new_password">
+                            </div>
+                        </div>
+                        
+                        <div class="form-text mb-3">
+                            Leave password fields blank if you don't want to change your password.
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

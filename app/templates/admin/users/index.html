@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <!-- Admin Sidebar -->
+            <div class="list-group mb-4 shadow-sm">
+                <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin.spaces') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-door-open me-2"></i>Spaces
+                </a>
+                <a href="{{ url_for('admin.bookings') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calendar-check me-2"></i>Bookings
+                </a>
+                <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-users me-2"></i>Users
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-10">
+            <h1 class="h3 mb-4">Manage Users</h1>
+            
+            <!-- Search and Filter -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <form class="row g-3">
+                        <div class="col-md-5">
+                            <label class="form-label">Search</label>
+                            <input type="text" class="form-control" placeholder="Search by username, email, or name...">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select">
+                                <option value="">All Roles</option>
+                                <option>user</option>
+                                <option>admin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option value="">All</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Users Table -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'primary' if user.role == 'admin' else 'secondary' }}">
+                                            {{ user.role }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if user.is_active else 'danger' }}">
+                                            {{ 'Active' if user.is_active else 'Inactive' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else 'Never' }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

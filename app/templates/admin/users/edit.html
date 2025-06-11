@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <!-- Admin Sidebar -->
+            <div class="list-group mb-4 shadow-sm">
+                <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin.spaces') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-door-open me-2"></i>Spaces
+                </a>
+                <a href="{{ url_for('admin.bookings') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calendar-check me-2"></i>Bookings
+                </a>
+                <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-users me-2"></i>Users
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-10">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{{ url_for('admin.users') }}" class="btn btn-outline-secondary me-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="h3 mb-0">Edit User</h1>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <!-- User Profile Card -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body text-center p-4">
+                            <img src="{{ url_for('static', filename='images/' + user.profile_image) }}" 
+                                 class="rounded-circle mb-3" width="120" alt="User Profile">
+                            <h5>{{ user.username }}</h5>
+                            <p class="text-muted mb-3">{{ user.email }}</p>
+                            <div class="d-flex justify-content-center">
+                                <span class="badge bg-{{ 'primary' if user.role == 'admin' else 'secondary' }} me-2">
+                                    {{ user.role|capitalize }}
+                                </span>
+                                <span class="badge bg-{{ 'success' if user.is_active else 'danger' }}">
+                                    {{ 'Active' if user.is_active else 'Inactive' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- User Stats Card -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title">User Statistics</h6>
+                            
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Joined</span>
+                                <span>{{ user.created_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Last Login</span>
+                                <span>{{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else 'Never' }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Bookings</span>
+                                <span>{{ user.bookings.count() }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Reviews</span>
+                                <span>{{ user.reviews.count() }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-8">
+                    <!-- User Edit Form -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="first_name" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="last_name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="role" class="form-label">Role</label>
+                                        <select class="form-select" id="role" name="role">
+                                            <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                                            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check form-switch mt-4">
+                                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active"
+                                                   {% if user.is_active %}checked{% endif %}>
+                                            <label class="form-check-label" for="is_active">Account Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info mb-4">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Password changes should be handled by the user themselves through their profile page.
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <a href="{{ url_for('admin.users') }}" class="btn btn-outline-secondary me-2">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

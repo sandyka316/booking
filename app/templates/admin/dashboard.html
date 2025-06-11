@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - BookSpace{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <!-- Admin Sidebar -->
+            <div class="list-group mb-4 shadow-sm">
+                <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin.spaces') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-door-open me-2"></i>Spaces
+                </a>
+                <a href="{{ url_for('admin.bookings') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calendar-check me-2"></i>Bookings
+                </a>
+                <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i>Users
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-10">
+            <h1 class="h3 mb-4">Admin Dashboard</h1>
+            
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Total Users</p>
+                                    <h3 class="mb-0">{{ total_users }}</h3>
+                                </div>
+                                <div class="bg-light rounded p-3">
+                                    <i class="fas fa-users text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Total Spaces</p>
+                                    <h3 class="mb-0">{{ total_spaces }}</h3>
+                                </div>
+                                <div class="bg-light rounded p-3">
+                                    <i class="fas fa-door-open text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Total Bookings</p>
+                                    <h3 class="mb-0">{{ total_bookings }}</h3>
+                                </div>
+                                <div class="bg-light rounded p-3">
+                                    <i class="fas fa-calendar-check text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Total Reviews</p>
+                                    <h3 class="mb-0">{{ total_reviews }}</h3>
+                                </div>
+                                <div class="bg-light rounded p-3">
+                                    <i class="fas fa-star text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Revenue Stats -->
+            <div class="row mb-4">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Revenue Overview</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="revenueDropdown" data-bs-toggle="dropdown">
+                                    This Week
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="revenueDropdown">
+                                    <li><a class="dropdown-item" href="#">This Week</a></li>
+                                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                                    <li><a class="dropdown-item" href="#">Last 3 Months</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-column flex-md-row justify-content-around mb-4">
+                                <div class="text-center">
+                                    <p class="text-muted mb-1">Today's Revenue</p>
+                                    <h4 class="mb-0">{{ format_price(revenue_today) }}</h4>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-muted mb-1">Weekly Revenue</p>
+                                    <h4 class="mb-0">{{ format_price(revenue_week) }}</h4>
+                                </div>
+                            </div>
+                            
+                            <canvas id="revenueChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Recent Bookings</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Space</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for booking in recent_bookings %}
+                                        <tr>
+                                            <td>{{ booking.user.username }}</td>
+                                            <td>{{ booking.space.name }}</td>
+                                            <td>{{ booking.start_time.strftime('%Y-%m-%d') }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if booking.status == 'confirmed' else 'danger' }}">
+                                                    {{ booking.status }}
+                                                </span>
+                                            </td>
+                                            <td class="text-end">{{ format_price(booking.total_price) }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-3">
+                                <a href="{{ url_for('admin.bookings') }}" class="btn btn-sm btn-outline-primary">View All Bookings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Analytics -->
+            <div class="row">
+                <div class="col-lg-8 mb-4 mb-lg-0">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Booking Analytics</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="bookingsChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Top Spaces</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush">
+                                {% for space, booking_count in top_spaces %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">{{ space.name }}</h6>
+                                        <small class="text-muted">{{ space.location }}</small>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill">{{ booking_count }} bookings</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="text-center p-3">
+                                <a href="{{ url_for('admin.spaces') }}" class="btn btn-sm btn-outline-primary">Manage Spaces</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Revenue Chart
+    var revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    var revenueChart = new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Revenue',
+                data: [450, 375, 600, 750, 500, 800, 950],
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                borderColor: 'rgba(13, 110, 253, 1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    // Bookings Chart
+    var bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
+    var bookingsChart = new Chart(bookingsCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ days|safe }},
+            datasets: [{
+                label: 'Number of Bookings',
+                data: {{ booking_counts|safe }},
+                backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

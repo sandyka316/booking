@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}BookSpace - Find Your Perfect Co-working Space{% endblock %}
+
+{% block content %}
+<div class="hero-section position-relative overflow-hidden py-5 mb-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-4">Find Your Perfect Workspace Today</h1>
+                <p class="lead mb-4">Discover and book co-working spaces, meeting rooms, and private offices that inspire productivity and creativity.</p>
+                <div class="d-flex flex-column flex-sm-row">
+                    <a href="{{ url_for('space.index') }}" class="btn btn-primary btn-lg mb-3 mb-sm-0 me-sm-3">
+                        Find Spaces <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                    <a href="{{ url_for('main.about') }}" class="btn btn-outline-secondary btn-lg">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" alt="Modern co-working space" class="img-fluid rounded-4 shadow-lg">
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">How It Works</h2>
+            <p class="lead text-muted">Book your perfect workspace in three simple steps</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white mb-3">
+                            <i class="fas fa-search fa-2x"></i>
+                        </div>
+                        <h3 class="h4 card-title">Find a Space</h3>
+                        <p class="card-text text-muted">Search by location, capacity, or amenities to find the perfect workspace for your needs.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white mb-3">
+                            <i class="fas fa-calendar-check fa-2x"></i>
+                        </div>
+                        <h3 class="h4 card-title">Book Instantly</h3>
+                        <p class="card-text text-muted">Choose your date and time, and confirm your booking with our real-time availability system.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white mb-3">
+                            <i class="fas fa-mug-hot fa-2x"></i>
+                        </div>
+                        <h3 class="h4 card-title">Enjoy Your Workspace</h3>
+                        <p class="card-text text-muted">Show up and get to work! All spaces are fully equipped with everything you need.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Featured Spaces</h2>
+            <p class="lead text-muted">Our most popular and highest-rated workspaces</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for space, avg_rating in top_spaces %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="{{ space.image_url or url_for('static', filename='images/space-placeholder.jpg') }}" class="card-img-top" alt="{{ space.name }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ space.name }}</h5>
+                            <span class="badge bg-primary rounded-pill">
+                                <i class="fas fa-star me-1"></i> {{ "%.1f"|format(avg_rating|float) }}
+                            </span>
+                        </div>
+                        <p class="card-text text-muted small">
+                            <i class="fas fa-map-marker-alt me-1"></i> {{ space.location }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-users me-1"></i> Up to {{ space.capacity }} people
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="fw-bold mb-0">{{ format_price(space.price_per_hour) }}/hour</p>
+                            <a href="{{ url_for('space.detail', space_id=space.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{{ url_for('space.index') }}" class="btn btn-outline-primary btn-lg">View All Spaces</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/quick-search.jpg') }}" alt="Quick search" class="img-fluid rounded-4">
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <h2 class="display-6 fw-bold mb-4">Quick Location Search</h2>
+                <p class="mb-4">Find spaces near you instantly. We have co-working spaces in these popular locations:</p>
+                
+                <div class="row g-2">
+                    {% for location, count in locations %}
+                    <div class="col-6">
+                        <a href="{{ url_for('space.index', location=location) }}" 
+                           class="btn btn-light btn-block text-start w-100 mb-2 shadow-sm">
+                            <i class="fas fa-location-dot me-2"></i> {{ location }}
+                            <span class="badge bg-secondary float-end">{{ count }}</span>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container">
+        <h2 class="display-6 fw-bold mb-4">Ready to Find Your Perfect Space

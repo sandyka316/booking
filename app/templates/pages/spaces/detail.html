@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}{{ space.name }} - BookSpace{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Space Images -->
+            <div class="card border-0 shadow-sm mb-4">
+                <img src="{{ space.image_url or url_for('static', filename='images/space-placeholder.jpg') }}" class="card-img-top" alt="{{ space.name }}">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h1 class="h2 mb-2">{{ space.name }}</h1>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-map-marker-alt me-2"></i>{{ space.location }}
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill me-2">
+                                    <i class="fas fa-star me-1"></i>{{ "%.1f"|format(avg_rating|float) }}
+                                </span>
+                                <span class="small text-muted">{{ reviews|length }} reviews</span>
+                            </div>
+                            <p class="fs-4 fw-bold mb-0">{{ format_price(space.price_per_hour) }}/hour</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Space Description -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">About This Space</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="feature-icon bg-light rounded-circle p-3 me-3">
+                                    <i class="fas fa-users text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-0">Capacity</p>
+                                    <p class="mb-0">Up to {{ space.capacity }} people</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="feature-icon bg-light rounded-circle p-3 me-3">
+                                    <i class="fas fa-ruler-combined text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-0">Type</p>
+                                    <p class="mb-0">{{ "Meeting Room" if space.capacity > 4 else "Workspace" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="feature-icon bg-light rounded-circle p-3 me-3">
+                                    <i class="fas fa-clock text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-0">Availability</p>
+                                    <p class="mb-0">7:00 AM - 10:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="mb-3">Description</h6>
+                    <p>{{ space.description }}</p>
+                    
+                    <h6 class="mb-3">Amenities</h6>
+                    <div class="row">
+                        {% if space.amenities %}
+                            {% set amenities_list = space.amenities.split(',') %}
+                            {% for amenity in amenities_list %}
+                            <div class="col-md-4 col-sm-6 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>{{ amenity.strip() }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-12">
+                                <p class="text-muted">No amenities listed for this space.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reviews -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Reviews</h5>
+                    <a href="{{ url_for('review.index', space_id=space.id) }}" class="btn btn-sm btn-outline-primary">View All Reviews</a>
+                </div>
+                <div class="card-body p-4">
+                    {% if reviews %}
+                        {% for review in reviews[:3] %}
+                            <div class="review {% if not loop.last %}mb-4 pb-4 border-bottom{% endif %}">
+                                <div class="d-flex mb-2">
+                                    <img src="{{ url_for('static', filename='images/default_profile.jpg') }}" class="rounded-circle me-3" width="40" alt="User">
+                                    <div>
+                                        <h6 class="mb-0">{{ review.user.username }}</h6>
+                                        <p class="text-muted small mb-1">{{ review.created_at.strftime('%B %d, %Y') }}</p>
+                                        <div class="rating">
+                                            {% for i in range(5) %}
+                                                <i class="fas fa-star {% if i < review.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mb-0">{{ review.comment }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center text-muted my-4">No reviews yet. Be the first to review this space!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Booking Card -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm position-sticky" style="top: 20px;">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Book This Space</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.is_authenticated %}
+                        <form id="booking-form" method="POST" action="{{ url_for('booking.create', space_id=space.id) }}">
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="text" class="form-control" id="date" name="date" placeholder="Select a date" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="start_time" class="form-label">Start Time</label>
+                                <select class="form-select" id="start_time" name="start_time" required disabled>
+                                    <option value="">Choose a date first</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="hours" class="form-label">Duration (hours)</label>
+                                <select class="form-select" id="hours" name="hours" required>
+                                    {% for i in range(1, 9) %}
+                                    <option value="{{ i }}">{{ i }} hour{% if i > 1 %}s{% endif %}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes (optional)</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+                            </div>
+                            
+                            <div class="card bg-light mb-3">
+                                <div class="card-body">
+                                    <h6 class="mb-2">Price Summary</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>{{ format_price(space.price_per_hour) }} × <span id="hours-display">1</span> hour(s)</span>
+                                        <span id="total-price">{{ format_price(space.price_per_hour) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">Book Now</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-info mb-3">
+                            <p class="mb-0">Please sign in to book this space.</p>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-primary">Sign In to Book</a>
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary">Create Account</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Date picker initialization
+        const datePicker = flatpickr('#date', {
+            minDate: "today",
+            maxDate: new Date().fp_incr(90), // 3 months in advance
+            dateFormat: "Y-m-d",
+            onChange: function(selectedDates, dateStr) {
+                // When date changes, get available time slots
+                document.querySelector('#start_time').disabled = true;
+                document.querySelector('#start_time').innerHTML = '<option>Loading available times...</option>';
+                
+                // Fetch available slots via AJAX
+                fetch('{{ url_for("space.available_slots", space_id=space.id) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `date=${dateStr}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const selectElement = document.querySelector('#start_time');
+                    selectElement.disabled = false;
+                    selectElement.innerHTML = '';
+                    
+                    if (data.slots && data.slots.length > 0) {
+                        data.slots.forEach(slot => {
+                            if (slot.available) {
+                                const option = document.createElement('option');
+                                option.value = slot.start;
+                                option.textContent = `${slot.start} - ${slot.end}`;
+                                selectElement.appendChild(option);
+                            }
+                        });
+                        
+                        if (selectElement.options.length === 0) {
+                            const option = document.createElement('option');
+                            option.value = '';
+                            option.textContent = 'No available times for this date';
+                            selectElement.appendChild(option);
+                            selectElement.disabled = true;
+                        }
+                    } else {
+                        const option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'Error loading available times';
+                        selectElement.appendChild(option);
+                        selectElement.disabled = true;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching available slots:', error);
+                    document.querySelector('#start_time').innerHTML = '<option>Error loading times</option>';
+                });
+            }
+        });
+        
+        // Update price based on duration
+        const hoursSelect = document.querySelector('#hours');
+        const hoursDisplay = document.querySelector('#hours-display');
+        const totalPrice = document.querySelector('#total-price');
+        const pricePerHour = {{ space.price_per_hour }};
+        
+        hoursSelect.addEventListener('change', function() {
+            const hours = parseInt(this.value);
+            hoursDisplay.textContent = hours;
+            totalPrice.textContent = `$${(pricePerHour * hours).toFixed(2)}`;
+        });
+    });
+</script>
+{% endblock %}

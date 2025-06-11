@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Bookings - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <!-- Admin Sidebar -->
+            <div class="list-group mb-4 shadow-sm">
+                <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin.spaces') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-door-open me-2"></i>Spaces
+                </a>
+                <a href="{{ url_for('admin.bookings') }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-calendar-check me-2"></i>Bookings
+                </a>
+                <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i>Users
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-10">
+            <h1 class="h3 mb-4">Manage Bookings</h1>
+            
+            <!-- Search and Filter -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <form class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Search</label>
+                            <input type="text" class="form-control" placeholder="User or space name...">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status">
+                                <option value="">All Statuses</option>
+                                <option value="confirmed" {% if selected_status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                <option value="cancelled" {% if selected_status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date Range</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" placeholder="From">
+                                <span class="input-group-text">to</span>
+                                <input type="date" class="form-control" placeholder="To">
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Bookings Table -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Space</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ booking.id }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.edit_user', user_id=booking.user.id) }}">
+                                            {{ booking.user.username }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('space.detail', space_id=booking.space.id) }}" target="_blank">
+                                            {{ booking.space.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ booking.start_time.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ booking.start_time.strftime('%H:%M') }} - {{ booking.end_time.strftime('%H:%M') }}</td>
+                                    <td>{{ "%.1f"|format(booking.duration_hours()) }} hrs</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if booking.status == 'confirmed' else 'danger' }}">
+                                            {{ booking.status|capitalize }}
+                                        </span>
+                                    </td>
+                                    <td>{{ format_price(booking.total_price) }}</td>
+                                    <td>
+                                        {% if booking.status == 'confirmed' and booking.is_upcoming() %}
+                                        <form method="POST" action="{{ url_for('booking.cancel', booking_id=booking.id) }}" 
+                                              onsubmit="return confirm('Are you sure you want to cancel this booking?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

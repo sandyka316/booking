@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Find Spaces - BookSpace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Filter Sidebar -->
+        <div class="col-lg-3 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Filters</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('space.index') }}" method="GET">
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <select name="location" class="form-select">
+                                <option value="">All Locations</option>
+                                {% for location in locations %}
+                                <option value="{{ location[0] }}" {% if selected_location == location[0] %}selected{% endif %}>{{ location[0] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Capacity</label>
+                            <div class="d-flex gap-2">
+                                <div class="flex-grow-1">
+                                    <input type="number" class="form-control" name="capacity_min" placeholder="Min" min="1" value="{{ capacity_min }}">
+                                </div>
+                                <span class="align-self-center">-</span>
+                                <div class="flex-grow-1">
+                                    <input type="number" class="form-control" name="capacity_max" placeholder="Max" min="1" value="{{ capacity_max }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Amenities</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="wifi" name="amenities" value="wifi">
+                                <label class="form-check-label" for="wifi">Wi-Fi</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="projector" name="amenities" value="projector">
+                                <label class="form-check-label" for="projector">Projector</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="whiteboard" name="amenities" value="whiteboard">
+                                <label class="form-check-label" for="whiteboard">Whiteboard</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="coffee" name="amenities" value="coffee">
+                                <label class="form-check-label" for="coffee">Coffee Machine</label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <a href="{{ url_for('space.index') }}" class="btn btn-outline-secondary mt-2">Reset Filters</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Space Listings -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Available Spaces</h2>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown">
+                        Sort By
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='price_asc') }}">Price: Low to High</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='price_desc') }}">Price: High to Low</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='capacity_asc') }}">Capacity: Low to High</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('space.index', **request.args, sort='capacity_desc') }}">Capacity: High to Low</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            {% if spaces.items %}
+                <div class="row g-4">
+                    {% for space in spaces.items %}
+                    <div class="col-md-6 col-xl-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <img src="{{ space.image_url or url_for('static', filename='images/space-placeholder.jpg') }}" class="card-img-top" alt="{{ space.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ space.name }}</h5>
+                                <p class="card-text text-muted small">
+                                    <i class="fas fa-map-marker-alt me-1"></i> {{ space.location }}
+                                </p>
+                                <p class="card-text">
+                                    <i class="fas fa-users me-1"></i> Up to {{ space.capacity }} people
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="fw-bold mb-0">{{ format_price(space.price_per_hour) }}/hour</p>
+                                    <a href="{{ url_for('space.detail', space_id=space.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if spaces.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('space.index', page=spaces.prev_num, **request.args) }}">Previous</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        {% endif %}
+                        
+                        {% for page_num in spaces.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                {% if page_num == spaces.page %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                                {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('space.index', page=page_num, **request.args) }}">{{ page_num }}</a>
+                                </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if spaces.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('space.index', page=spaces.next_num, **request.args) }}">Next</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% else %}
+                <div class="alert alert-info text-center p-5">
+                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                    <h5>No spaces found matching your criteria</h5>
+                    <p>Try adjusting your filters or search for different terms.</p>
+                    <a href="{{ url_for('space.index') }}" class="btn btn-outline-primary mt-2">Clear Filters</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

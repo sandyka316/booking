@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Leave a Review - BookSpace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h2 class="h4 mb-0">Leave a Review</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <div class="d-flex">
+                            <img src="{{ booking.space.image_url or url_for('static', filename='images/space-placeholder.jpg') }}" 
+                                 class="rounded me-3" alt="{{ booking.space.name }}" style="width: 80px; height: 80px; object-fit: cover;">
+                            <div>
+                                <h3 class="h5 mb-1">{{ booking.space.name }}</h3>
+                                <p class="text-muted small mb-1">
+                                    <i class="fas fa-map-marker-alt me-1"></i> {{ booking.space.location }}
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    Booked on {{ booking.start_time.strftime('%B %d, %Y') }} from 
+                                    {{ booking.start_time.strftime('%I:%M %p') }} to {{ booking.end_time.strftime('%I:%M %p') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('booking.review', booking_id=booking.id) }}">
+                        <div class="mb-3">
+                            <label class="form-label">Your Rating</label>
+                            <div class="star-rating">
+                                <div class="d-flex flex-row-reverse justify-content-end">
+                                    {% for i in range(5, 0, -1) %}
+                                    <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" 
+                                           class="visually-hidden" required>
+                                    <label for="star{{ i }}" class="rating-star fs-4 text-muted me-1">
+                                        <i class="fas fa-star"></i>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="comment" class="form-label">Your Review</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="4" 
+                                      placeholder="Share your experience with this space..."></textarea>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('booking.my_bookings') }}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle star rating hover and selection
+        const stars = document.querySelectorAll('.rating-star');
+        
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', function() {
+                // Reset all stars
+                stars.forEach(s => s.classList.remove('text-warning'));
+                
+                // Light up this star and all stars before it
+                let current = this;
+                while (current) {
+                    current.classList.add('text-warning');
+                    current = current.nextElementSibling;
+                }
+            });
+            
+            star.addEventListener('click', function() {
+                // Find the associated input and check it
+                const input = this.previousElementSibling;
+                input.checked = true;
+            });
+        });
+        
+        // Handle mouse leaving the rating area
+        const ratingContainer = document.querySelector('.star-rating');
+        ratingContainer.addEventListener('mouseleave', function() {
+            // Reset all stars
+            stars.forEach(s => s.classList.remove('text-warning'));
+            
+            // Light up stars based on selected rating
+            const checked = document.querySelector('input[name="rating"]:checked');
+            if (checked) {
+                const value = parseInt(checked.value);
+                let count = 0;
+                stars.forEach(star => {
+                    if (count < value) {
+                        star.classList.add('text-warning');
+                    }
+                    count++;
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

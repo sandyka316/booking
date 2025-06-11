@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Space - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <!-- Admin Sidebar -->
+            <div class="list-group mb-4 shadow-sm">
+                <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin.spaces') }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-door-open me-2"></i>Spaces
+                </a>
+                <a href="{{ url_for('admin.bookings') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calendar-check me-2"></i>Bookings
+                </a>
+                <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i>Users
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-10">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{{ url_for('admin.spaces') }}" class="btn btn-outline-secondary me-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="h3 mb-0">Edit Space</h1>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('admin.edit_space', space_id=space.id) }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Space Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ space.name }}" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="location" class="form-label">Location *</label>
+                                <input type="text" class="form-control" id="location" name="location" value="{{ space.location }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="capacity" class="form-label">Capacity (people) *</label>
+                                <input type="number" class="form-control" id="capacity" name="capacity" min="1" value="{{ space.capacity }}" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="price_per_hour" class="form-label">Price Per Hour ($) *</label>
+                                <input type="number" class="form-control" id="price_per_hour" name="price_per_hour" min="0" step="0.01" value="{{ space.price_per_hour }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4">{{ space.description }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="image_url" class="form-label">Image URL</label>
+                            <input type="url" class="form-control" id="image_url" name="image_url" value="{{ space.image_url }}">
+                            <div class="form-text">Enter a URL to an image of the space</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {% if space.image_url %}
+                            <label class="form-label">Current Image Preview</label>
+                            <div>
+                                <img src="{{ space.image_url }}" alt="{{ space.name }}" class="img-thumbnail" style="max-height: 200px">
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Amenities</label>
+                            <textarea class="form-control" id="amenities" name="amenities" placeholder="Wi-Fi, Coffee Machine, Projector, Whiteboard">{{ space.amenities }}</textarea>
+                            <div class="form-text">Enter amenities separated by commas</div>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="is_available" name="is_available" {% if space.is_available %}checked{% endif %}>
+                            <label class="form-check-label" for="is_available">
+                                Space is available for booking
+                            </label>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <form action="{{ url_for('admin.delete_space', space_id=space.id) }}" method="POST" 
+                                  onsubmit="return confirm('Are you sure you want to delete this space? This action cannot be undone.')">
+                                <button type="submit" class="btn btn-outline-danger">Delete Space</button>
+                            </form>
+                            
+                            <div>
+                                <a href="{{ url_for('admin.spaces') }}" class="btn btn-outline-secondary me-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
