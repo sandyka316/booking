@@ -1,5 +1,7 @@
-create-admin
+create-admin.py
 
 .env
+
 venv/
+
 instance/
